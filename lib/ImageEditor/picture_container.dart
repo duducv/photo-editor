@@ -27,7 +27,7 @@ class PictureContainer extends StatelessWidget {
 
     if (imgWidth != null && imgHeight != null && pixels != null) {
       return Container(
-          color: Colors.white,
+          color: const Color(0xFF000000),
           child: FittedBox(
             child: SizedBox(
               height: imgHeight.toDouble(),
