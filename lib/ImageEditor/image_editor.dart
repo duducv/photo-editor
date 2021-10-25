@@ -21,9 +21,9 @@ class ImageEditor extends StatelessWidget {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.settings), label: 'Editar'),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.ac_unit_outlined), label: 'Editar'),
+                    icon: Icon(Icons.style), label: 'Preset'),
               ],
-              backgroundColor: const Color(0xFF121212),
+              backgroundColor: const Color(0xFF000000),
             )
           ],
         ),
