@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:perfect_face/ImageEditor/picture_container.dart';
+import 'package:perfect_face/components/footer.dart';
 
 class ImageEditor extends StatelessWidget {
   const ImageEditor({Key? key}) : super(key: key);
@@ -6,25 +8,13 @@ class ImageEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SafeArea(
         child: Column(
-          children: [
+          children: const [
             Expanded(
-              child: Container(),
+              child: PictureContainer(),
             ),
-            BottomNavigationBar(
-              selectedItemColor: Colors.white,
-              unselectedItemColor: const Color(0xFF9D9D9D),
-              items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.face_outlined), label: 'Moldar'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.settings), label: 'Editar'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.style), label: 'Preset'),
-              ],
-              backgroundColor: const Color(0xFF000000),
-            )
+            Footer(),
           ],
         ),
       ),
