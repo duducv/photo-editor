@@ -7,10 +7,16 @@ import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import 'package:perfect_face/components/ImageCanvas/image_canvas.dart';
 
-class PictureContainer extends StatelessWidget {
+class PictureContainer extends StatefulWidget {
   const PictureContainer({Key? key}) : super(key: key);
 
-  Future<ui.Image> _convertPixelToImageFromProvider(
+  @override
+  State<PictureContainer> createState() => _PictureContainerState();
+}
+
+class _PictureContainerState extends State<PictureContainer> {
+  ui.Image? _img;
+  Future<ui.Image> _convertPixelToImage(
       Uint8List pixels, int width, int height) async {
     final _img =
         await ImageConvertions().makeImageFromPixels(pixels, width, height);
@@ -33,8 +39,7 @@ class PictureContainer extends StatelessWidget {
               height: imgHeight.toDouble(),
               width: imgWidth.toDouble(),
               child: FutureBuilder<ui.Image>(
-                future: _convertPixelToImageFromProvider(
-                    pixels, imgWidth, imgHeight),
+                future: _convertPixelToImage(pixels, imgWidth, imgHeight),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return CustomPaint(

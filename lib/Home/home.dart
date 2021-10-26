@@ -11,9 +11,10 @@ class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
   _pickImageFromGallery(BuildContext context) async {
+    final _screenWidth = MediaQuery.of(context).size.width;
     try {
-      final imageData =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      final imageData = await ImagePicker()
+          .pickImage(source: ImageSource.gallery, maxWidth: 1024);
       if (imageData != null) {
         final imageAsBytes = await imageData.readAsBytes();
         final decodedImageFromBytes =
@@ -23,6 +24,7 @@ class Home extends StatelessWidget {
         final imagePixelsAsByteData = await decodedImageFromBytes.toByteData(
             format: ImageByteFormat.rawRgba);
         if (imagePixelsAsByteData != null) {
+          print(decodedImageFromBytes.width);
           final imagePixels = imagePixelsAsByteData.buffer.asUint8List();
           context.read<PictureProvider>().setSavedPixels(imagePixels);
           context.read<PictureProvider>().setTemporaryPixels(imagePixels);
