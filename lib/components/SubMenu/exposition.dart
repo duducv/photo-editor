@@ -6,13 +6,13 @@ import 'package:perfect_face/FFI/ffi.dart';
 import 'package:perfect_face/components/save_changes_banner.dart';
 import 'package:perfect_face/controller/image_controller.dart';
 
-class Temperature extends StatelessWidget {
-  Temperature({Key? key}) : super(key: key);
+class Exposure extends StatelessWidget {
+  Exposure({Key? key}) : super(key: key);
   final controller = Get.put(ImageController());
 
   _onSliderChange(double value) {
-    final modifiedPixels = FFI().greenChannel(controller.backupPixels!,
-        value.round(), controller.imgWidth!, controller.imgHeight!);
+    final modifiedPixels =
+        FFI().exposure(controller.backupPixels!, value.round());
     controller.actualPixels!.setAll(0, modifiedPixels);
     controller.changeSlidervalue(value);
   }
@@ -32,7 +32,7 @@ class Temperature extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     const Icon(
-                      Icons.ac_unit,
+                      Icons.exposure_minus_1,
                       color: Color(0xFF9D9D9D),
                     ),
                     GetBuilder<ImageController>(
@@ -43,7 +43,7 @@ class Temperature extends StatelessWidget {
                               onChanged: _onSliderChange,
                             ))),
                     const Icon(
-                      Icons.thermostat,
+                      Icons.exposure_plus_1,
                       color: Color(0xFF9D9D9D),
                     )
                   ],

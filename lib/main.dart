@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:perfect_face/Home/home.dart';
-import 'package:perfect_face/ImageEditor/image_editor.dart';
-import 'package:perfect_face/provider/image.dart';
 import 'package:perfect_face/theme/theme.dart';
-import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => PictureProvider()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+  runApp(const GetMaterialApp(home: MyApp()));
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       systemNavigationBarColor: Color(0xFF000000),
@@ -31,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: themeDefault,
-      home: const Home(),
+      home: Home(),
     );
   }
 }

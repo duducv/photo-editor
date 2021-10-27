@@ -12,3 +12,4 @@ crate-type = ["staticlib", "cdylib"]
 [dependencies]
 libc = "0.2.103"
 rayon = "1.5.1"
+image = "0.23.14"

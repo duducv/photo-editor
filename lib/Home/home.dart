@@ -1,33 +1,35 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:perfect_face/ImageEditor/image_editor.dart';
-import 'package:perfect_face/provider/image.dart';
+import 'package:perfect_face/controller/image_controller.dart';
 import 'package:perfect_face/utils/image_convertions.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
+
+  final controller = Get.put(ImageController());
 
   _pickImageFromGallery(BuildContext context) async {
-    final _screenWidth = MediaQuery.of(context).size.width;
     try {
       final imageData = await ImagePicker()
-          .pickImage(source: ImageSource.gallery, maxWidth: 1024);
+          .pickImage(source: ImageSource.gallery, maxWidth: 500);
+
       if (imageData != null) {
         final imageAsBytes = await imageData.readAsBytes();
+
         final decodedImageFromBytes =
             await ImageConvertions().loadEncodedImageFromBytes(imageAsBytes);
-        context.read<PictureProvider>().changeImageDimensions(
-            decodedImageFromBytes.width, decodedImageFromBytes.height);
+
         final imagePixelsAsByteData = await decodedImageFromBytes.toByteData(
             format: ImageByteFormat.rawRgba);
+
         if (imagePixelsAsByteData != null) {
-          print(decodedImageFromBytes.width);
           final imagePixels = imagePixelsAsByteData.buffer.asUint8List();
-          context.read<PictureProvider>().setSavedPixels(imagePixels);
-          context.read<PictureProvider>().setTemporaryPixels(imagePixels);
+          controller.changeSavedPixels(imagePixels, decodedImageFromBytes.width,
+              decodedImageFromBytes.height);
           Navigator.of(context).push(
               MaterialPageRoute(builder: (builder) => const ImageEditor()));
         }

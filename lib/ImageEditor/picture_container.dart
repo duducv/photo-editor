@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:perfect_face/provider/image.dart';
-import 'package:perfect_face/utils/image_convertions.dart';
-import 'package:provider/provider.dart';
-import 'dart:ui' as ui;
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:perfect_face/components/ImageCanvas/image_canvas.dart';
+import 'dart:ui' as ui;
+import 'package:perfect_face/controller/image_controller.dart';
+import 'package:perfect_face/utils/image_convertions.dart';
 
 class PictureContainer extends StatefulWidget {
   const PictureContainer({Key? key}) : super(key: key);
@@ -15,43 +17,54 @@ class PictureContainer extends StatefulWidget {
 }
 
 class _PictureContainerState extends State<PictureContainer> {
-  ui.Image? _img;
-  Future<ui.Image> _convertPixelToImage(
-      Uint8List pixels, int width, int height) async {
-    final _img =
-        await ImageConvertions().makeImageFromPixels(pixels, width, height);
-    return _img;
+  final controller = Get.put(ImageController());
+  ui.Image? image;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      ImageConvertions()
+          .makeImageFromPixels(controller.actualPixels!, controller.imgWidth,
+              controller.imgHeight)
+          .then((value) => setState(() {
+                image = value;
+              }));
+    });
+  }
+
+  _updateImage() {
+    print("red ${controller.actualPixels![0]}");
+    print("green ${controller.actualPixels![1]}");
+    print("blue ${controller.actualPixels![2]}");
+    print("alfa ${controller.actualPixels![3]}");
+    ImageConvertions()
+        .makeImageFromPixels(
+            controller.actualPixels!, image!.width, image!.height)
+        .then((value) => {
+              setState(() {
+                image = value;
+              })
+            });
   }
 
   @override
   Widget build(BuildContext context) {
-    final pixels = context.watch<PictureProvider>().temporaryPixelsInUse
-        ? context.read<PictureProvider>().temporaryPixels
-        : context.read<PictureProvider>().savedPixels;
-    final imgWidth = context.watch<PictureProvider>().imgOriginalWidth;
-    final imgHeight = context.watch<PictureProvider>().imgOriginalHeigth;
-
-    if (imgWidth != null && imgHeight != null && pixels != null) {
+    if (image != null) {
       return Container(
-          color: const Color(0xFF000000),
-          child: FittedBox(
-            child: SizedBox(
-              height: imgHeight.toDouble(),
-              width: imgWidth.toDouble(),
-              child: FutureBuilder<ui.Image>(
-                future: _convertPixelToImage(pixels, imgWidth, imgHeight),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return CustomPaint(
-                      painter: PictureCustomCanvas(img: snapshot.data!),
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            ),
-          ));
+          color: const Color(0xFF121212),
+          child: FittedBox(child: GetBuilder<ImageController>(
+            builder: (_) {
+              _updateImage();
+              return SizedBox(
+                height: image!.height.toDouble(),
+                width: image!.width.toDouble(),
+                child: CustomPaint(
+                  painter: PictureCustomCanvas(img: image!),
+                ),
+              );
+            },
+          )));
     } else {
       return Container();
     }
